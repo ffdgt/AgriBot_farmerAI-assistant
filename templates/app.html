@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AgriBot</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #chat-box { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
+    #user-input { width: 80%; padding: 5px; }
+    #send-btn { padding: 5px 10px; }
+    .message { margin: 5px 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+  </style>
+</head>
+<body>
+  <h1>AgriBot</h1>
+  <nav>
+    <a href="/app?module=chat">Chat</a> |
+    <a href="/news">News</a> |
+    <a href="/resources">Resources</a>
+  </nav>
+
+  <div id="content">
+    {% if module == 'chat' %}
+      <div id="chat-box"></div>
+      <input type="text" id="user-input" placeholder="Type your message here...">
+      <button id="send-btn">Send</button>
+    {% else %}
+      <p>Content for {{ module }} will appear here...</p>
+    {% endif %}
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function appendMessage(sender, text) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + sender;
+      msg.textContent = (sender === 'user' ? 'You: ' : 'Bot: ') + text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const text = userInput.value.trim();
+        if (!text) return;
+        appendMessage('user', text);
+        userInput.value = '';
+
+        fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ text })
+        })
+        .then(res => res.json())
+        .then(data => {
+          appendMessage('bot', data.text);
+        })
+        .catch(err => {
+          appendMessage('bot', "Error connecting to the AI service.");
+          console.error(err);
+        });
+      });
+
+      userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendBtn.click();
+      });
+    }
+  </script>
+</body>
+</html>

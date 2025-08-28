@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AgriBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: url('https://bsmedia.business-standard.com/_media/bs/img/article/2024-08/02/full/1722596238-1449.jpg?im=FitAndFill=(826,465)') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Overlay for readability */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(16, 185, 129, 0.5);
+            z-index: 1;
+        }
+
+        .welcome-container {
+            text-align: center;
+            color: white;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 6rem; /* Large and similar to Blood Group project */
+            font-weight: 900; /* Extra bold */
+            text-shadow: 0 0 30px rgba(255,255,255,0.7), 0 0 60px rgba(255,255,255,0.4);
+            animation: pulseGlow 2s infinite alternate;
+            margin: 0;
+        }
+
+        p {
+            font-size: 2rem; 
+            margin-top: 1rem;
+            animation: fadeInText 3s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); text-shadow: 0 0 20px rgba(255,255,255,0.6); }
+            50% { transform: scale(1.05); text-shadow: 0 0 50px rgba(255,255,255,1); }
+            100% { transform: scale(1); text-shadow: 0 0 20px rgba(255,255,255,0.6); }
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>WELCOME TO AGRIBOT</h1>
+        <p>Your Farming Companion</p>
+    </div>
+
+    <script>
+        // Redirect to main page after 6 seconds
+        setTimeout(() => {
+            window.location.href = "/home"; // Update with your main page route
+        }, 6000);
+    </script>
+</body>
+</html>

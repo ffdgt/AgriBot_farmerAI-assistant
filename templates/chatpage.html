@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriBot Chat</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #dff6f0, #f4f8f6);
+  }
+
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw; /* Full horizontal width */
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    background-color: #199621;
+    color: #ffffff;
+    padding: 16px 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+  }
+
+  .back-btn {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #723605;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s;
+  }
+
+  .back-btn:hover {
+    background-color: #000000;
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f0fdfb;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-input-container {
+    display: flex;
+    border-top: 1px solid #e2e8f0;
+    background-color: #edfdfd;
+    padding: 10px;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  .chat-send-btn {
+    background-color: #20ae20;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .chat-send-btn:hover {
+    background-color: #24c626;
+  }
+
+  .message {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .message.user .text {
+    align-self: flex-end;
+    background-color: #2ac437;
+    color: white;
+    border-radius: 18px 18px 0 18px;
+    padding: 12px 18px;
+    max-width: 75%;
+    word-wrap: break-word;
+  }
+
+  .message.bot .text {
+    align-self: flex-start;
+    background-color: #e0f7f5;
+    color: #32b44a;
+    border-radius: 18px 18px 18px 0;
+    padding: 12px 18px;
+    max-width: 75%;
+    word-wrap: break-word;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(5px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+  <div class="chat-header">
+    <a href="/home" class="back-btn">&larr; Back</a>
+    AgriBot Chat
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="message bot">
+      <div class="text">Hello! I am AgriBot. How can I help you today?</div>
+    </div>
+  </div>
+
+  <div class="chat-input-container">
+    <input type="text" id="chat-input" class="chat-input" placeholder="Type your message...">
+    <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+async function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const message = input.value.trim();
+  if (!message) return;
+
+  const chatMessages = document.getElementById("chat-messages");
+
+  const userMsgDiv = document.createElement("div");
+  userMsgDiv.classList.add("message", "user");
+  userMsgDiv.innerHTML = `<div class="text">${message}</div>`;
+  chatMessages.appendChild(userMsgDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  input.value = "";
+
+  try {
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `text=${encodeURIComponent(message)}`
+    });
+    const data = await response.json();
+
+    const botMsgDiv = document.createElement("div");
+    botMsgDiv.classList.add("message", "bot");
+    botMsgDiv.innerHTML = `<div class="text">${data.text}</div>`;
+    chatMessages.appendChild(botMsgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+document.getElementById("chat-input").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+
+</body>
+</html>

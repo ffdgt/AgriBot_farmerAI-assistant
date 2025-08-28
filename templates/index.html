@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriBot - Home</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(19,213,103,0.5), rgba(239,246,255,0.7)),
+                    url('https://eos.com/wp-content/uploads/2023/04/rice-field.jpg.webp') no-repeat center center fixed;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .main-heading {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        animation: slideDown 1.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modules-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        max-width: 800px;
+        z-index: 10;
+    }
+
+    .module-card {
+        width: 200px;
+        height: 150px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #065f46;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        text-align: center;
+        position: relative;
+    }
+    .module-card:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+
+    #weather-card {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.85);
+        border: 1px solid #a7f3d0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        color: #065f46;
+        z-index: 10;
+        text-align: center;
+    }
+
+    /* Weather Animations */
+    .cloud {
+        position: absolute;
+        width: 200px;
+        height: 100px;
+        background: url('https://upload.wikimedia.org/wikipedia/commons/e/e0/Cloud_icon.svg') no-repeat center;
+        background-size: contain;
+        opacity: 0.6;
+        top: 50px;
+        animation: moveClouds linear infinite;
+        z-index: 5;
+    }
+
+    @keyframes moveClouds {
+        0% { left: -250px; }
+        100% { left: 100%; }
+    }
+
+    .rain-drop {
+        position: absolute;
+        width: 2px;
+        height: 15px;
+        background: rgba(173, 216, 230, 0.7);
+        top: -20px;
+        animation: fall linear infinite;
+        z-index: 5;
+    }
+
+    @keyframes fall {
+        to { transform: translateY(100vh); }
+    }
+
+    .sun {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, #FFD700 60%, rgba(255,215,0,0.4) 100%);
+        border-radius: 50%;
+        top: 50px;
+        right: 50px;
+        z-index: 5;
+        animation: spin 20s linear infinite;
+        box-shadow: 0 0 40px 10px rgba(255, 223, 0, 0.6);
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+</style>
+</head>
+<body>
+
+<!-- Main Heading -->
+<div class="main-heading">AGRIBOT</div>
+
+<!-- Rotating Quotes -->
+<div id="quotes-wrap" class="w-full max-w-2xl mb-6">
+  <div id="quote-box" class="flex items-start gap-3 p-4 rounded-xl bg-white/80 border border-emerald-200 shadow">
+    <svg class="w-6 h-6 flex-shrink-0 mt-1 text-emerald-700" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7.17 6A5.17 5.17 0 0 0 2 11.17V22h8V10a4 4 0 0 0-2.83-4ZM19.17 6A5.17 5.17 0 0 0 14 11.17V22h8V10a4 4 0 0 0-2.83-4Z"/>
+    </svg>
+    <div>
+      <p id="quote-text" class="text-lg text-emerald-900 font-medium"></p>
+      <p id="quote-author" class="text-sm text-emerald-700 mt-1"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Weather Card -->
+<div id="weather-card">
+    <h2 class="font-bold text-xl mb-2">Current Weather</h2>
+    <p id="weather-location" class="text-lg"></p>
+    <p id="weather-temp" class="text-lg"></p>
+    <p id="weather-conditions" class="text-lg"></p>
+    <p id="weather-humidity" class="text-lg"></p>
+</div>
+
+<!-- Weather Animations -->
+<div id="weather-animations"></div>
+
+<!-- Modules -->
+<div class="modules-container">
+    <div class="module-card" onclick="openModule('chat')">💬 Chat</div>
+    <div class="module-card" onclick="window.location.href='news.html'">📰 News</div>
+    <div class="module-card" onclick="window.location.href='/facts'">📚 Facts & Info</div>
+    <div class="module-card" onclick="window.location.href='/resources'">📂 Resources</div>
+</div>
+
+<script>
+// Quotes
+const quotes = [
+  { text: "Healthy soil grows healthy crops—feed the soil, not just the plant.", author: "AgriBot" },
+  { text: "Irrigate early morning or late evening to cut evaporation losses.", author: "Water-Smart Tip" },
+  { text: "Rotate crops to break pest cycles and improve soil structure.", author: "Field Wisdom" },
+  { text: "Test your soil every 2–3 years; guesswork is the costliest input.", author: "Soil Lab Note" },
+  { text: "Integrated pest management saves money and protects pollinators.", author: "IPM Guide" }
+];
+
+const qText   = document.getElementById('quote-text');
+const qAuthor = document.getElementById('quote-author');
+const qBox    = document.getElementById('quote-box');
+
+let i = 0;
+function renderQuote(index, first=false) {
+  if (!first) {
+    qBox.classList.remove('quote-enter');
+    qBox.classList.add('quote-exit');
+    setTimeout(() => {
+      qText.textContent   = `“${quotes[index].text}”`;
+      qAuthor.textContent = `— ${quotes[index].author}`;
+      qBox.classList.remove('quote-exit');
+      qBox.classList.add('quote-enter');
+    }, 380);
+  } else {
+    qText.textContent   = `“${quotes[index].text}”`;
+    qAuthor.textContent = `— ${quotes[index].author}`;
+    qBox.classList.add('quote-enter');
+  }
+}
+
+renderQuote(i, true);
+setInterval(() => {
+  i = (i + 1) % quotes.length;
+  renderQuote(i);
+}, 5000);
+
+// Open Module
+function openModule(module) {
+    if(module === 'chat'){
+        window.location.href = `/chatpage`; 
+    } else {
+        window.location.href = `/app?module=${module}`; 
+    }
+}
+
+// Weather fetch & animations
+function fetchWeather() {
+    fetch('/weather?location=Hyderabad')
+        .then(response => response.json())
+        .then(data => {
+            if(data.error){
+                document.getElementById('weather-card').innerHTML = `<p class="text-red-600">${data.error}</p>`;
+                return;
+            }
+            document.getElementById('weather-location').textContent = `Location: ${data.location}`;
+            document.getElementById('weather-temp').textContent = `Temperature: ${data.temperature}°C`;
+            document.getElementById('weather-conditions').textContent = `Conditions: ${data.conditions}`;
+            document.getElementById('weather-humidity').textContent = `Humidity: ${data.humidity}%`;
+
+            const animDiv = document.getElementById('weather-animations');
+            animDiv.innerHTML = '';
+            const condition = data.conditions.toLowerCase();
+
+            if(condition.includes('cloud')) {
+                for(let i=0;i<3;i++){
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    cloud.style.top = `${50 + i*60}px`;
+                    cloud.style.animationDuration = `${50 + i*20}s`;
+                    animDiv.appendChild(cloud);
+                }
+            } else if(condition.includes('rain')) {
+                for(let i=0;i<100;i++){
+                    const drop = document.createElement('div');
+                    drop.className = 'rain-drop';
+                    drop.style.left = `${Math.random()*100}vw`;
+                    drop.style.animationDuration = `${0.5 + Math.random()*0.5}s`;
+                    drop.style.animationDelay = `${Math.random()*2}s`;
+                    animDiv.appendChild(drop);
+                }
+            } else if(condition.includes('sun') || condition.includes('clear')) {
+                const sun = document.createElement('div');
+                sun.className = 'sun';
+                animDiv.appendChild(sun);
+            }
+        })
+        .catch(err => console.error(err));
+}
+
+document.addEventListener('DOMContentLoaded', fetchWeather);
+</script>
+</body>
+</html>
