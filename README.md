@@ -13,6 +13,7 @@ This repository contains the complete source code, assets, and implementation of
 - Usage
 - Technologies used
 - Requirements
+- Contributing
 - License
 
 
@@ -31,7 +32,9 @@ AgriBot is a smart web application designed to assist farmers. By leveraging AI 
 The project is built with **Flask** for the backend and **HTML, Tailwind CSS, and JavaScript** for the frontend.
 
 ---
-## Demo Video
+🎥 **Demo Video**  
+[Watch the Demo Video](https://drive.google.com/file/d/1i_YmzdvRPKm8faCIoioh5CLwuYBNVJ9e/view?usp=drivesdk)
+
 
 
 ---
