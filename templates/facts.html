@@ -1,76 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriBot - Facts & Info</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0fdf4;
-            padding: 2rem;
-        }
-        .fact-tile {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriBot - Facts</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(19,213,103,0.5), rgba(239,246,255,0.7)),
+                    url('https://eos.com/wp-content/uploads/2023/04/rice-field.jpg.webp') no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
+    }
+    .main-heading {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: rgba(255,255,255,0.85);
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        color: #065f46;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .language-switcher {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
+    }
+    .content-container {
+        background: rgba(255,255,255,0.9);
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+    .fact-card {
+        padding: 1.5rem;
+        background: #f0fdf4;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+    }
+    .fact-card:hover {
+        transform: scale(1.02);
+    }
+</style>
 </head>
 <body>
-    <h1 class="text-3xl font-bold text-emerald-800 mb-6">Facts & Info</h1>
 
-    <!-- Fact Tiles -->
-    <div class="fact-tile">
-        <div class="text-3xl">💧</div>
-        <div>
-            <strong class="text-emerald-800">Paddy Cultivation:</strong> Rice needs about 1,500 liters of water to produce one kilogram of grain. Efficient water management is key!
-        </div>
-    </div>
+<a href="index.html" class="back-button" data-translate-key="back-button">← Home</a>
 
-    <div class="fact-tile">
-        <div class="text-3xl">🛡️</div>
-        <div>
-            <strong class="text-emerald-800">Pesticide Safety:</strong> Always wear protective gear when handling pesticides. Over 95% of sprayed herbicides can miss their target, affecting the environment.
-        </div>
-    </div>
+<!-- Language Switcher -->
+<div class="language-switcher">
+    <select id="language-select" class="rounded-lg p-2 bg-white text-green-800 border-2 border-green-600 font-semibold" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+    </select>
+</div>
 
-    <div class="fact-tile">
-        <div class="text-3xl">🌱</div>
-        <div>
-            <strong class="text-emerald-800">Soil Health:</strong> Healthy soil is alive! A single teaspoon can contain billions of microbes. Using compost and organic matter feeds these essential organisms.
-        </div>
-    </div>
+<!-- Main Heading -->
+<div class="main-heading" data-translate-key="facts-title">AgriBot Facts & Info</div>
 
-    <div class="fact-tile">
-        <div class="text-3xl">🐝</div>
-        <div>
-            <strong class="text-emerald-800">Pollinators:</strong> Bees are crucial for many crops. Avoid spraying insecticides during peak bee activity (usually mid-day) to protect them.
-        </div>
-    </div>
+<div class="content-container">
+    <div id="facts-list"></div>
+</div>
 
-    <!-- YouTube Podcast -->
-    <div class="card">
-        <h2 class="font-bold text-xl mb-2 text-emerald-800">Agriculture Podcast</h2>
-        <div class="aspect-w-16 aspect-h-9">
-            <iframe src="https://www.youtube.com/embed/EH1K-fiFpRg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="rounded-lg w-full h-full" style="min-height: 250px;"></iframe>
-        </div>
-    </div>
+<script>
+const translations = {
+    en: {
+        'back-button': '← Home',
+        'facts-title': 'AgriBot Facts & Info',
+        facts: [
+            { title: "Photosynthesis Explained", text: "Photosynthesis is the process used by plants, algae and certain bacteria to convert light energy into chemical energy. It is the foundation of most food chains on Earth." },
+            { title: "Soil pH Matters", text: "The pH level of the soil determines the availability of nutrients for the plants. Most crops prefer a slightly acidic to neutral pH (6.0 to 7.0)." },
+            { title: "The Role of Pollinators", text: "Pollinators, such as bees and butterflies, are crucial for the reproduction of over 75% of the world's flowering plants and 35% of global food crops." },
+            { title: "Vertical Farming", text: "Vertical farming is the practice of growing crops in vertically stacked layers. It uses significantly less land and water and is a sustainable solution for urban areas." },
+            { title: "Watering Wisdom", text: "The best time to water crops is early morning or late evening to minimize evaporation and ensure the roots have enough time to absorb moisture." }
+        ]
+    },
+    te: {
+        'back-button': '← హోమ్',
+        'facts-title': 'అగ్రిబోట్ వాస్తవాలు & సమాచారం',
+        facts: [
+            { title: "కిరణజన్య సంయోగక్రియ వివరణ", text: "కిరణజన్య సంయోగక్రియ అనేది మొక్కలు, ఆల్గే మరియు కొన్ని బ్యాక్టీరియాలు కాంతి శక్తిని రసాయన శక్తిగా మార్చే ప్రక్రియ. ఇది భూమిపై చాలా ఆహార గొలుసులకు ఆధారం." },
+            { title: "నేల pH ప్రాముఖ్యత", text: "నేల pH స్థాయి మొక్కలకు పోషకాల లభ్యతను నిర్ణయిస్తుంది. చాలా పంటలు కొద్దిగా ఆమ్లత్వం నుండి తటస్థ pH (6.0 నుండి 7.0) వరకు ఇష్టపడతాయి." },
+            { title: "పుప్పొడి వాహకాల పాత్ర", text: "తేనెటీగలు మరియు సీతాకోకచిలుకలు వంటి పుప్పొడి వాహకాలు ప్రపంచంలోని 75% కంటే ఎక్కువ పూల మొక్కల మరియు 35% ప్రపంచ ఆహార పంటల పునరుత్పత్తికి కీలకం." },
+            { title: "నిలువు వ్యవసాయం", text: "నిలువు వ్యవసాయం అనేది పంటలను నిలువుగా పేర్చిన పొరలలో పెంచే పద్ధతి. ఇది చాలా తక్కువ భూమి మరియు నీటిని ఉపయోగిస్తుంది మరియు పట్టణ ప్రాంతాలకు ఒక స్థిరమైన పరిష్కారం." },
+            { title: "నీరు పెట్టే జ్ఞానం", text: "పంటలకు నీరు పెట్టడానికి ఉత్తమ సమయం ఉదయం లేదా సాయంత్రం, తద్వారా ఆవిరిని తగ్గించి మరియు వేర్లు తేమను గ్రహించడానికి తగినంత సమయం ఉండేలా చూసుకోవచ్చు." }
+        ]
+    }
+};
 
-    <div class="mt-6">
-        <a href="/home" class="text-emerald-700 font-semibold hover:underline">&larr; Back to Home</a>
-    </div>
+let currentLanguage = 'en';
+const factsList = document.getElementById('facts-list');
+
+function renderFacts() {
+    const facts = translations[currentLanguage].facts;
+    factsList.innerHTML = '';
+    facts.forEach(fact => {
+        const factCard = document.createElement('div');
+        factCard.className = 'fact-card';
+        factCard.innerHTML = `
+            <h3 class="text-xl font-semibold text-green-800 mb-2">${fact.title}</h3>
+            <p class="text-gray-700">${fact.text}</p>
+        `;
+        factsList.appendChild(factCard);
+    });
+}
+
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.getAttribute('data-translate-key');
+        if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+    renderFacts();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    changeLanguage('en'); // Initial render
+});
+</script>
+
 </body>
 </html>

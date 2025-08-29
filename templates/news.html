@@ -1,63 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agribot - News</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriBot - News</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #56ab2f, #a8e063);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(19,213,103,0.5), rgba(239,246,255,0.7)),
+                    url('https://eos.com/wp-content/uploads/2023/04/rice-field.jpg.webp') no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
     }
-    header {
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
+    .main-heading {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
     }
-    .news-container {
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: rgba(255,255,255,0.85);
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        color: #065f46;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .article {
-      background: rgba(255, 255, 255, 0.9);
-      margin-bottom: 15px;
-      padding: 15px;
-      border-radius: 8px;
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .article a {
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
+    .language-switcher {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
     }
-    .article a:hover {
-      color: #4caf50;
+    .content-container {
+        background: rgba(255,255,255,0.9);
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
-    .source {
-      font-size: 14px;
-      color: #666;
+    .news-article-card {
+        padding: 1.5rem;
+        background: #f0fdf4;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
     }
-  </style>
+    .news-article-card:hover {
+        transform: scale(1.02);
+    }
+</style>
 </head>
 <body>
-  <header>🌾 Agribot - Latest Agriculture News</header>
 
-  <div class="news-container">
-    {% if articles %}
-      {% for article in articles %}
-        <div class="article">
-          <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
-          <div class="source">Source: {{ article.source }}</div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p>No news articles available at the moment.</p>
-    {% endif %}
-  </div>
+<a href="index.html" class="back-button" data-translate-key="back-button">← Home</a>
+
+<!-- Language Switcher -->
+<div class="language-switcher">
+    <select id="language-select" class="rounded-lg p-2 bg-white text-green-800 border-2 border-green-600 font-semibold" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+    </select>
+</div>
+
+<!-- Main Heading -->
+<div class="main-heading" data-translate-key="news-title">AgriBot News</div>
+
+<div class="content-container">
+    <div id="news-list"></div>
+</div>
+
+<script>
+const translations = {
+    en: {
+        'back-button': '← Home',
+        'news-title': 'AgriBot News',
+        news: [
+            { title: "Government Announces New Subsidy for Farmers", text: "The Ministry of Agriculture has unveiled a new subsidy program to support small and marginal farmers in adopting modern irrigation techniques." },
+            { title: "Monsoon Arrives Early in Southern States", text: "Weather reports confirm the early arrival of the monsoon season, bringing a sense of relief and optimism to farmers in the southern regions." },
+            { title: "New Drought-Resistant Rice Variety Developed", text: "Agricultural scientists have successfully developed a new rice variety that can withstand prolonged dry spells, offering a solution to water scarcity issues." },
+            { title: "Farm-to-Table Initiatives Gain Popularity", text: "Local initiatives connecting farmers directly with consumers are growing, leading to fresher produce and better prices for growers." },
+            { title: "Challenges in Crop Storage Discussed at Seminar", text: "Experts and farmers gathered to discuss innovative solutions to reduce post-harvest losses and improve storage infrastructure." }
+        ]
+    },
+    te: {
+        'back-button': '← హోమ్',
+        'news-title': 'అగ్రిబోట్ వార్తలు',
+        news: [
+            { title: "రైతులకు కొత్త సబ్సిడీని ప్రకటించిన ప్రభుత్వం", text: "ఆధునిక నీటిపారుదల పద్ధతులను అవలంబించడానికి చిన్న మరియు సన్నకారు రైతులకు మద్దతుగా వ్యవసాయ మంత్రిత్వ శాఖ ఒక కొత్త సబ్సిడీ కార్యక్రమాన్ని ఆవిష్కరించింది." },
+            { title: "దక్షిణ రాష్ట్రాల్లో ముందస్తుగా రుతుపవనాలు", text: "రుతుపవనాల ముందస్తు ఆగమనాన్ని వాతావరణ నివేదికలు ధృవీకరించాయి, దక్షిణ ప్రాంతాల రైతులకు ఇది ఉపశమనం మరియు ఆశావాదాన్ని ఇచ్చింది." },
+            { title: "కొత్త కరువు-నిరోధక వరి రకం అభివృద్ధి", text: "వ్యవసాయ శాస్త్రవేత్తలు సుదీర్ఘ పొడి వాతావరణాన్ని తట్టుకునే కొత్త వరి రకాన్ని విజయవంతంగా అభివృద్ధి చేశారు, నీటి కొరత సమస్యలకు ఇది ఒక పరిష్కారం." },
+            { title: "ఫార్మ్-టు-టేబుల్ చొరవలకు ప్రజాదరణ", text: "రైతులను నేరుగా వినియోగదారులతో అనుసంధానించే స్థానిక కార్యక్రమాలు పెరుగుతున్నాయి, దీనివల్ల తాజా ఉత్పత్తులు మరియు రైతులకు మంచి ధరలు లభిస్తున్నాయి." },
+            { title: "పంట నిల్వలో సవాళ్లపై సెమినార్లో చర్చ", text: "పంట కోత తర్వాత నష్టాలను తగ్గించడానికి మరియు నిల్వ మౌలిక సదుపాయాలను మెరుగుపరచడానికి నిపుణులు మరియు రైతులు కలిసి వినూత్న పరిష్కారాలపై చర్చించారు." }
+        ]
+    }
+};
+
+let currentLanguage = 'en';
+const newsList = document.getElementById('news-list');
+
+function renderNews() {
+    const news = translations[currentLanguage].news;
+    newsList.innerHTML = '';
+    news.forEach(article => {
+        const newsCard = document.createElement('div');
+        newsCard.className = 'news-article-card';
+        newsCard.innerHTML = `
+            <h3 class="text-xl font-semibold text-green-800 mb-2">${article.title}</h3>
+            <p class="text-gray-700">${article.text}</p>
+        `;
+        newsList.appendChild(newsCard);
+    });
+}
+
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.getAttribute('data-translate-key');
+        if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+    renderNews();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    changeLanguage('en'); // Initial render
+});
+</script>
+
 </body>
 </html>

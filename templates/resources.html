@@ -8,96 +8,151 @@
 <style>
     body {
         font-family: 'Inter', sans-serif;
-        background-color: #f0fdf4;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        background: linear-gradient(to bottom, rgba(19,213,103,0.5), rgba(239,246,255,0.7)),
+                    url('https://eos.com/wp-content/uploads/2023/04/rice-field.jpg.webp') no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
+    }
+    .main-heading {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }
+    .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: rgba(255,255,255,0.85);
+        padding: 0.5rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        color: #065f46;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .language-switcher {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
+    }
+    .content-container {
+        background: rgba(255,255,255,0.9);
+        border-radius: 1rem;
         padding: 2rem;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
     .resource-card {
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-        border-radius: 12px;
         padding: 1.5rem;
+        background: #f0fdf4;
+        border-radius: 0.75rem;
         margin-bottom: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
     }
-    .card-title {
-        font-weight: bold;
-        color: #065f46;
-        margin-bottom: 0.5rem;
-    }
-    .card-description {
-        color: #065f46;
-        margin-bottom: 0.5rem;
+    .resource-card:hover {
+        transform: scale(1.02);
     }
 </style>
 </head>
 <body>
-    <h1 class="text-3xl font-bold text-emerald-800 mb-6">Resources</h1>
 
-    <!-- Websites -->
-    <div class="resource-card">
-        <div class="card-title">Indian Council of Agricultural Research (ICAR)</div>
-        <a href="https://www.icar.org.in/" target="_blank" class="text-emerald-700 hover:underline">https://www.icar.org.in/</a>
-    </div>
+<a href="index.html" class="back-button" data-translate-key="back-button">← Home</a>
 
-    <div class="resource-card">
-        <div class="card-title">Ministry of Agriculture & Farmers Welfare</div>
-        <a href="https://agricoop.nic.in/" target="_blank" class="text-emerald-700 hover:underline">https://agricoop.nic.in/</a>
-    </div>
+<!-- Language Switcher -->
+<div class="language-switcher">
+    <select id="language-select" class="rounded-lg p-2 bg-white text-green-800 border-2 border-green-600 font-semibold" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+    </select>
+</div>
 
-    <div class="resource-card">
-        <div class="card-title">National Bank for Agriculture and Rural Development (NABARD)</div>
-        <a href="https://www.nabard.org/" target="_blank" class="text-emerald-700 hover:underline">https://www.nabard.org/</a>
-    </div>
+<!-- Main Heading -->
+<div class="main-heading" data-translate-key="resources-title">AgriBot Resources</div>
 
-    <div class="resource-card">
-        <div class="card-title">FAO (Food & Agriculture Organization)</div>
-        <a href="https://www.fao.org/" target="_blank" class="text-emerald-700 hover:underline">https://www.fao.org/</a>
-    </div>
+<div class="content-container">
+    <div id="resources-list"></div>
+</div>
 
-    <div class="resource-card">
-        <div class="card-title">Agriculture Today</div>
-        <a href="https://www.agriculturetoday.in/" target="_blank" class="text-emerald-700 hover:underline">https://www.agriculturetoday.in/</a>
-    </div>
+<script>
+const translations = {
+    en: {
+        'back-button': '← Home',
+        'resources-title': 'AgriBot Resources',
+        resources: [
+            { title: "National Centre for Organic Farming", description: "Official website with information on organic farming standards and practices in India.", url: "https://ncof.dacnet.nic.in/" },
+            { title: "Indian Council of Agricultural Research (ICAR)", description: "ICAR is a key institution for research and education in agriculture.", url: "https://www.icar.org.in/" },
+            { title: "Kisan Suvidha Portal", description: "A one-stop app for farmers to get information on weather, dealers, market price, plant protection, and more.", url: "https://mkisan.gov.in/Kisaan-app-english.aspx" },
+            { title: "e-NAM (Electronic National Agriculture Market)", description: "A pan-India electronic trading portal for agricultural commodities.", url: "https://www.enam.gov.in/" },
+            { title: "Soil Health Card Scheme", description: "A scheme to provide every farmer with a 'Soil Health Card' to guide them on soil nutrients and proper dosage of fertilizers.", url: "https://www.soilhealth.dac.gov.in/" }
+        ]
+    },
+    te: {
+        'back-button': '← హోమ్',
+        'resources-title': 'అగ్రిబోట్ వనరులు',
+        resources: [
+            { title: "జాతీయ సేంద్రీయ వ్యవసాయ కేంద్రం", description: "భారతదేశంలో సేంద్రీయ వ్యవసాయ ప్రమాణాలు మరియు పద్ధతులపై సమాచారం కోసం అధికారిక వెబ్‌సైట్.", url: "https://ncof.dacnet.nic.in/" },
+            { title: "భారత వ్యవసాయ పరిశోధనా మండలి (ICAR)", description: "వ్యవసాయంలో పరిశోధన మరియు విద్య కోసం ICAR ఒక ముఖ్యమైన సంస్థ.", url: "https://www.icar.org.in/" },
+            { title: "కిసాన్ సువిధా పోర్టల్", description: "రైతులకు వాతావరణం, డీలర్లు, మార్కెట్ ధర, మొక్కల రక్షణ మరియు మరిన్నింటిపై సమాచారం పొందడానికి ఒకే చోట లభించే యాప్.", url: "https://mkisan.gov.in/Kisaan-app-english.aspx" },
+            { title: "e-NAM (ఎలక్ట్రానిక్ జాతీయ వ్యవసాయ మార్కెట్)", description: "వ్యవసాయ వస్తువుల కోసం ఒక పాన్-ఇండియా ఎలక్ట్రానిక్ ట్రేడింగ్ పోర్టల్.", url: "https://www.enam.gov.in/" },
+            { title: "సాయిల్ హెల్త్ కార్డు పథకం", description: "రైతులకు నేల పోషకాలు మరియు ఎరువుల సరైన మోతాదుపై మార్గదర్శకత్వం చేయడానికి 'సాయిల్ హెల్త్ కార్డు' అందించే పథకం.", url: "https://www.soilhealth.dac.gov.in/" }
+        ]
+    }
+};
 
-    <div class="resource-card">
-        <div class="card-title">Krishi Jagran</div>
-        <a href="https://www.krishijagran.com/" target="_blank" class="text-emerald-700 hover:underline">https://www.krishijagran.com/</a>
-    </div>
+let currentLanguage = 'en';
+const resourcesList = document.getElementById('resources-list');
 
-    <!-- Schemes -->
-    <h2 class="text-2xl font-bold text-emerald-800 mt-8 mb-4">Agricultural Schemes</h2>
+function renderResources() {
+    const resources = translations[currentLanguage].resources;
+    resourcesList.innerHTML = '';
+    resources.forEach(res => {
+        const resourceCard = document.createElement('div');
+        resourceCard.className = 'resource-card';
+        resourceCard.innerHTML = `
+            <h3 class="text-xl font-semibold text-green-800 mb-2">${res.title}</h3>
+            <p class="text-gray-700 mb-2">${res.description}</p>
+            <a href="${res.url}" target="_blank" class="text-green-600 hover:text-green-800 font-medium">Learn More →</a>
+        `;
+        resourcesList.appendChild(resourceCard);
+    });
+}
 
-    <div class="resource-card">
-        <div class="card-title">PMFBY</div>
-        <div class="card-description">Comprehensive crop insurance scheme for farmers.</div>
-    </div>
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.getAttribute('data-translate-key');
+        if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+    renderResources();
+}
 
-    <div class="resource-card">
-        <div class="card-title">PKVY</div>
-        <div class="card-description">Promotes organic farming across India.</div>
-    </div>
+document.addEventListener('DOMContentLoaded', () => {
+    changeLanguage('en'); // Initial render
+});
+</script>
 
-    <div class="resource-card">
-        <div class="card-title">Soil Health Card</div>
-        <div class="card-description">Provides soil nutrient information to farmers.</div>
-    </div>
-
-    <div class="resource-card">
-        <div class="card-title">National Agriculture Market (eNAM)</div>
-        <div class="card-description">Online trading platform for farmers to sell crops.</div>
-    </div>
-
-    <div class="resource-card">
-        <div class="card-title">Rashtriya Krishi Vikas Yojana (RKVY)</div>
-        <div class="card-description">Promotes holistic development of agriculture and allied sectors.</div>
-    </div>
-
-    <div class="resource-card">
-        <div class="card-title">Paramparagat Krishi Vikas Yojana</div>
-        <div class="card-description">Promotes sustainable organic farming practices.</div>
-    </div>
-
-    <div class="mt-6">
-        <a href="/home" class="text-emerald-700 font-semibold hover:underline">&larr; Back to Home</a>
-    </div>
 </body>
 </html>

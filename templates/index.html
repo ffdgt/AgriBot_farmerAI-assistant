@@ -132,13 +132,27 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-
+    
+    .language-switcher {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 20;
+    }
 </style>
 </head>
 <body>
 
+<!-- Language Switcher -->
+<div class="language-switcher">
+    <select id="language-select" class="rounded-lg p-2 bg-white text-green-800 border-2 border-green-600 font-semibold" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+    </select>
+</div>
+
 <!-- Main Heading -->
-<div class="main-heading">AGRIBOT</div>
+<div class="main-heading" data-translate-key="agribot-title">AGRIBOT</div>
 
 <!-- Rotating Quotes -->
 <div id="quotes-wrap" class="w-full max-w-2xl mb-6">
@@ -155,11 +169,11 @@
 
 <!-- Weather Card -->
 <div id="weather-card">
-    <h2 class="font-bold text-xl mb-2">Current Weather</h2>
-    <p id="weather-location" class="text-lg"></p>
-    <p id="weather-temp" class="text-lg"></p>
-    <p id="weather-conditions" class="text-lg"></p>
-    <p id="weather-humidity" class="text-lg"></p>
+    <h2 class="font-bold text-xl mb-2" data-translate-key="weather-title">Current Weather</h2>
+    <p id="weather-location" class="text-lg" data-translate-key="weather-location">Fetching location...</p>
+    <p id="weather-temp" class="text-lg" data-translate-key="weather-temp-label"></p>
+    <p id="weather-conditions" class="text-lg" data-translate-key="weather-conditions-label"></p>
+    <p id="weather-humidity" class="text-lg" data-translate-key="weather-humidity-label"></p>
 </div>
 
 <!-- Weather Animations -->
@@ -167,95 +181,190 @@
 
 <!-- Modules -->
 <div class="modules-container">
-    <div class="module-card" onclick="openModule('chat')">💬 Chat</div>
-    <div class="module-card" onclick="window.location.href='news.html'">📰 News</div>
-    <div class="module-card" onclick="window.location.href='/facts'">📚 Facts & Info</div>
-    <div class="module-card" onclick="window.location.href='/resources'">📂 Resources</div>
+    <div class="module-card" onclick="openModule('chat')" data-translate-key="chat-module">💬 Chat</div>
+    <div class="module-card" onclick="window.location.href='news.html'" data-translate-key="news-module">📰 News</div>
+    <div class="module-card" onclick="window.location.href='/facts'" data-translate-key="facts-module">📚 Facts & Info</div>
+    <div class="module-card" onclick="window.location.href='/resources'" data-translate-key="resources-module">📂 Resources</div>
 </div>
 
 <script>
-// Quotes
-const quotes = [
-  { text: "Healthy soil grows healthy crops—feed the soil, not just the plant.", author: "AgriBot" },
-  { text: "Irrigate early morning or late evening to cut evaporation losses.", author: "Water-Smart Tip" },
-  { text: "Rotate crops to break pest cycles and improve soil structure.", author: "Field Wisdom" },
-  { text: "Test your soil every 2–3 years; guesswork is the costliest input.", author: "Soil Lab Note" },
-  { text: "Integrated pest management saves money and protects pollinators.", author: "IPM Guide" }
-];
+// Multilingual Translations
+const translations = {
+    en: {
+        'agribot-title': 'AGRIBOT',
+        'weather-title': 'Current Weather',
+        'weather-location': 'Fetching location...',
+        'weather-temp-label': 'Temperature',
+        'weather-conditions-label': 'Conditions',
+        'weather-humidity-label': 'Humidity',
+        'chat-module': '💬 Chat',
+        'news-module': '📰 News',
+        'facts-module': '📚 Facts & Info',
+        'resources-module': '📂 Resources',
+        quotes: [
+            { text: "Healthy soil grows healthy crops—feed the soil, not just the plant.", author: "AgriBot" },
+            { text: "Irrigate early morning or late evening to cut evaporation losses.", author: "Water-Smart Tip" },
+            { text: "Rotate crops to break pest cycles and improve soil structure.", author: "Field Wisdom" },
+            { text: "Test your soil every 2–3 years; guesswork is the costliest input.", author: "Soil Lab Note" },
+            { text: "Integrated pest management saves money and protects pollinators.", author: "IPM Guide" }
+        ],
+        weather: {
+            'clear sky': 'Clear Sky',
+            'few clouds': 'Few Clouds',
+            'scattered clouds': 'Scattered Clouds',
+            'broken clouds': 'Broken Clouds',
+            'shower rain': 'Shower Rain',
+            'rain': 'Rain',
+            'thunderstorm': 'Thunderstorm',
+            'snow': 'Snow',
+            'mist': 'Mist'
+        }
+    },
+    te: {
+        'agribot-title': 'అగ్రిబోట్',
+        'weather-title': 'ప్రస్తుత వాతావరణం',
+        'weather-location': 'స్థానం కోసం వెతుకుతోంది...',
+        'weather-temp-label': 'ఉష్ణోగ్రత',
+        'weather-conditions-label': 'పరిస్థితులు',
+        'weather-humidity-label': 'తేమ',
+        'chat-module': '💬 చాట్',
+        'news-module': '📰 వార్తలు',
+        'facts-module': '📚 వాస్తవాలు & సమాచారం',
+        'resources-module': '📂 వనరులు',
+        quotes: [
+            { text: "ఆరోగ్యకరమైన నేల ఆరోగ్యకరమైన పంటలను పెంచుతుంది—మొక్కకు మాత్రమే కాకుండా నేలకు కూడా ఆహారం ఇవ్వండి.", author: "అగ్రిబోట్" },
+            { text: "నీటిని ఆవిరి అవ్వకుండా ఆపడానికి ఉదయం లేదా సాయంత్రం వేళల్లో నీరు పెట్టండి.", author: "నీటి-మేధస్సు చిట్కా" },
+            { text: "తెగుళ్ల చక్రాలను విచ్ఛిన్నం చేయడానికి మరియు నేల నిర్మాణాన్ని మెరుగుపరచడానికి పంటలను మార్చి మార్చి పండించండి.", author: "పొలం జ్ఞానం" },
+            { text: "ప్రతి 2-3 సంవత్సరాలకు మీ నేలను పరీక్షించండి; ఊహించడం చాలా ఖరీదైనది.", author: "నేల ప్రయోగశాల గమనిక" },
+            { text: "సమగ్ర తెగులు నిర్వహణ డబ్బును ఆదా చేస్తుంది మరియు పుప్పొడి వాహకాలను రక్షిస్తుంది.", author: "ఐపిఎం గైడ్" }
+        ],
+        weather: {
+            'clear sky': 'తెల్లని ఆకాశం',
+            'few clouds': 'కొన్ని మేఘాలు',
+            'scattered clouds': 'చెల్లాచెదురుగా ఉన్న మేఘాలు',
+            'broken clouds': 'విరిగిన మేఘాలు',
+            'shower rain': 'చినుకులు',
+            'rain': 'వర్షం',
+            'thunderstorm': 'ఉరుములతో కూడిన వర్షం',
+            'snow': 'మంచు',
+            'mist': 'పొగమంచు'
+        }
+    }
+};
 
-const qText   = document.getElementById('quote-text');
+let currentLanguage = 'en';
+const qText = document.getElementById('quote-text');
 const qAuthor = document.getElementById('quote-author');
-const qBox    = document.getElementById('quote-box');
+const qBox = document.getElementById('quote-box');
 
-let i = 0;
-function renderQuote(index, first=false) {
-  if (!first) {
-    qBox.classList.remove('quote-enter');
-    qBox.classList.add('quote-exit');
-    setTimeout(() => {
-      qText.textContent   = `“${quotes[index].text}”`;
-      qAuthor.textContent = `— ${quotes[index].author}`;
-      qBox.classList.remove('quote-exit');
-      qBox.classList.add('quote-enter');
-    }, 380);
-  } else {
-    qText.textContent   = `“${quotes[index].text}”`;
-    qAuthor.textContent = `— ${quotes[index].author}`;
-    qBox.classList.add('quote-enter');
-  }
+// Function to change the language
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-translate-key]').forEach(element => {
+        const key = element.getAttribute('data-translate-key');
+        if (translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+
+    // Reset quote index and rerender
+    i = 0;
+    renderQuote(i, true);
+    
+    // Refresh weather info to update labels
+    getWeatherByLocation();
 }
 
+// Quotes
+let i = 0;
+function renderQuote(index, first = false) {
+    const quotes = translations[currentLanguage].quotes;
+    if (!first) {
+        qBox.classList.remove('quote-enter');
+        qBox.classList.add('quote-exit');
+        setTimeout(() => {
+            qText.textContent = `“${quotes[index].text}”`;
+            qAuthor.textContent = `— ${quotes[index].author}`;
+            qBox.classList.remove('quote-exit');
+            qBox.classList.add('quote-enter');
+        }, 380);
+    } else {
+        qText.textContent = `“${quotes[index].text}”`;
+        qAuthor.textContent = `— ${quotes[index].author}`;
+        qBox.classList.add('quote-enter');
+    }
+}
+
+// Initial quote render
 renderQuote(i, true);
 setInterval(() => {
-  i = (i + 1) % quotes.length;
-  renderQuote(i);
+    i = (i + 1) % translations[currentLanguage].quotes.length;
+    renderQuote(i);
 }, 5000);
 
 // Open Module
 function openModule(module) {
-    if(module === 'chat'){
-        window.location.href = `/chatpage`; 
+    if (module === 'chat') {
+        window.location.href = `/chatpage`;
     } else {
-        window.location.href = `/app?module=${module}`; 
+        window.location.href = `/app?module=${module}`;
     }
 }
 
 // Weather fetch & animations
-function fetchWeather() {
-    fetch('/weather?location=Hyderabad')
-        .then(response => response.json())
+function fetchWeather(locationOrLat, lon = null) {
+    let url = '';
+    if (lon !== null) {
+        // Use coordinates
+        url = `/weather?lat=${locationOrLat}&lon=${lon}`;
+    } else {
+        // Use a city name
+        url = `/weather?location=${locationOrLat}`;
+    }
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            if(data.error){
+            if (data.error) {
                 document.getElementById('weather-card').innerHTML = `<p class="text-red-600">${data.error}</p>`;
                 return;
             }
-            document.getElementById('weather-location').textContent = `Location: ${data.location}`;
-            document.getElementById('weather-temp').textContent = `Temperature: ${data.temperature}°C`;
-            document.getElementById('weather-conditions').textContent = `Conditions: ${data.conditions}`;
-            document.getElementById('weather-humidity').textContent = `Humidity: ${data.humidity}%`;
+            const lang = currentLanguage;
+            const translatedConditions = translations[lang].weather[data.conditions.toLowerCase()] || data.conditions;
+
+            document.getElementById('weather-location').textContent = `${translations[lang]['weather-location']}: ${data.location}`;
+            document.getElementById('weather-temp').textContent = `${translations[lang]['weather-temp-label']}: ${data.temperature}°C`;
+            document.getElementById('weather-conditions').textContent = `${translations[lang]['weather-conditions-label']}: ${translatedConditions}`;
+            document.getElementById('weather-humidity').textContent = `${translations[lang]['weather-humidity-label']}: ${data.humidity}%`;
 
             const animDiv = document.getElementById('weather-animations');
             animDiv.innerHTML = '';
             const condition = data.conditions.toLowerCase();
 
-            if(condition.includes('cloud')) {
-                for(let i=0;i<3;i++){
+            if (condition.includes('cloud')) {
+                for (let j = 0; j < 3; j++) {
                     const cloud = document.createElement('div');
                     cloud.className = 'cloud';
-                    cloud.style.top = `${50 + i*60}px`;
-                    cloud.style.animationDuration = `${50 + i*20}s`;
+                    cloud.style.top = `${50 + j * 60}px`;
+                    cloud.style.animationDuration = `${50 + j * 20}s`;
                     animDiv.appendChild(cloud);
                 }
-            } else if(condition.includes('rain')) {
-                for(let i=0;i<100;i++){
+            } else if (condition.includes('rain')) {
+                for (let j = 0; j < 100; j++) {
                     const drop = document.createElement('div');
                     drop.className = 'rain-drop';
-                    drop.style.left = `${Math.random()*100}vw`;
-                    drop.style.animationDuration = `${0.5 + Math.random()*0.5}s`;
-                    drop.style.animationDelay = `${Math.random()*2}s`;
+                    drop.style.left = `${Math.random() * 100}vw`;
+                    drop.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
+                    drop.style.animationDelay = `${Math.random() * 2}s`;
                     animDiv.appendChild(drop);
                 }
-            } else if(condition.includes('sun') || condition.includes('clear')) {
+            } else if (condition.includes('sun') || condition.includes('clear')) {
                 const sun = document.createElement('div');
                 sun.className = 'sun';
                 animDiv.appendChild(sun);
@@ -264,7 +373,28 @@ function fetchWeather() {
         .catch(err => console.error(err));
 }
 
-document.addEventListener('DOMContentLoaded', fetchWeather);
+// Function to get the user's location and fetch weather
+function getWeatherByLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                fetchWeather(lat, lon); // Call fetchWeather with coordinates
+            },
+            (error) => {
+                console.error("Geolocation error: ", error);
+                document.getElementById('weather-location').textContent = 'Geolocation is not supported. Showing default weather.';
+                fetchWeather('Hanamkonda'); // Fallback to a default location
+            }
+        );
+    } else {
+        document.getElementById('weather-location').textContent = 'Geolocation is not supported. Showing default weather.';
+        fetchWeather('Hanamkonda'); // Fallback
+    }
+}
+
+document.addEventListener('DOMContentLoaded', getWeatherByLocation);
 </script>
 </body>
 </html>
