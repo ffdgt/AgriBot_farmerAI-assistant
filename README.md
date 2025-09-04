@@ -50,14 +50,14 @@ The project is built with **Flask** for the backend and **HTML, Tailwind CSS, an
 ### Installation Steps
 1. Clone the repository:
 ```bash
-git clone https://github.com/PoojaReddy44/AgriBot.git
+git clone
 cd AgriBot
 
 ## Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/PoojaReddy44/AgriBot.git
+   git clone 
    cd AgriBot
 ````
 
